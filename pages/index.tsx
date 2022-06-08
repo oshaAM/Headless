@@ -1,14 +1,17 @@
-import { Welcome } from '../components/Welcome/Welcome';
-import { ColorSchemeToggle } from '../components/ColorSchemeToggle/ColorSchemeToggle';
-import { Button } from '@mantine/core';
+import { Button, Container } from '@mantine/core';
+import { Header } from '@/landing/components/Header';
+import { Trending } from '@/landing/components/Trending';
+import { Footer } from '@/landing/components/Footer';
 
+// Landing page
 export default function HomePage() {
   return (
     <>
-      <p className="text-center text-2xl">meow</p>
-      <Welcome />
-      <ColorSchemeToggle />
-      <Button className="mt-4">meow</Button>
+      <Header />
+      <Container>
+        <Trending />
+      </Container>
+      <Footer />
     </>
   );
 }
