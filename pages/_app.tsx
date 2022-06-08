@@ -1,37 +1,33 @@
-import { GetServerSidePropsContext } from 'next';
-import { useState } from 'react';
+import { GetServerSidePropsContext, NextPage } from 'next';
+import { ReactElement, ReactNode, useState } from 'react';
 import { AppProps } from 'next/app';
 import { getCookie, setCookies } from 'cookies-next';
-import Head from 'next/head';
-import { MantineProvider, ColorScheme, ColorSchemeProvider } from '@mantine/core';
-import { NotificationsProvider } from '@mantine/notifications';
+import { ColorScheme, ColorSchemeProvider, MantineProvider } from '@mantine/core';
+import { DefaultLayout } from '@/core/layouts/DefaultLayout';
 
-export default function App(props: AppProps & { colorScheme: ColorScheme }) {
+type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+export default function App(
+  props: AppProps & { colorScheme: ColorScheme; Component: NextPageWithLayout }
+) {
   const { Component, pageProps } = props;
   const [colorScheme, setColorScheme] = useState<ColorScheme>(props.colorScheme);
-
   const toggleColorScheme = (value?: ColorScheme) => {
     const nextColorScheme = value || (colorScheme === 'dark' ? 'light' : 'dark');
     setColorScheme(nextColorScheme);
     setCookies('mantine-color-scheme', nextColorScheme, { maxAge: 60 * 60 * 24 * 30 });
   };
 
-  return (
-    <>
-      <Head>
-        <title>Mantine next example</title>
-        <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
-        <link rel="shortcut icon" href="/favicon.svg" />
-      </Head>
+  const getLayout = Component.getLayout || ((page) => <DefaultLayout>{page}</DefaultLayout>);
 
-      <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-        <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
-          <NotificationsProvider>
-            <Component {...pageProps} />
-          </NotificationsProvider>
-        </MantineProvider>
-      </ColorSchemeProvider>
-    </>
+  return (
+    <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
+      <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
+        {getLayout(<Component {...pageProps} />)}
+      </MantineProvider>
+    </ColorSchemeProvider>
   );
 }
 
