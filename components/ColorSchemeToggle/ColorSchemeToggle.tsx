@@ -9,10 +9,15 @@ export function ColorSchemeToggle() {
       <ActionIcon
         onClick={() => toggleColorScheme()}
         size="xl"
+        variant="transparent"
+        radius="xl"
         sx={(theme) => ({
+          colors: {
+            'bgcolor': ['#fbf1e6', '#ded9d1', '#c4c0b8', '#aca69f', '#7a736b', '#605a53', '#45403a', '#2c2520', '#150b00']
+          },
           backgroundColor:
-            theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-          color: theme.colorScheme === 'dark' ? theme.colors.yellow[4] : theme.colors.blue[6],
+            theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.bgcolor,
+          color: theme.colorScheme === 'dark' ? theme.colors.gray[0] : theme.colors.dark[9],
         })}
       >
         {colorScheme === 'dark' ? (

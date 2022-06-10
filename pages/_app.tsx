@@ -4,7 +4,7 @@ import { AppProps } from 'next/app';
 import { getCookie, setCookies } from 'cookies-next';
 import { ColorScheme, ColorSchemeProvider, MantineProvider } from '@mantine/core';
 import { DefaultLayout } from '@/core/layouts/DefaultLayout';
-
+import "../styles/global.css"
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
