@@ -1,17 +1,19 @@
-import { GetServerSidePropsContext, NextPage } from 'next';
-import { ReactElement, ReactNode, useState } from 'react';
+import { NextPage } from 'next';
+import { ReactNode, useState } from 'react';
 import { getCookie, setCookies } from 'cookies-next';
 import { ColorScheme, ColorSchemeProvider, MantineProvider } from '@mantine/core';
 import { DefaultLayout } from '@/core/layouts/DefaultLayout';
-// import { SessionProvider } from 'next-auth/react';
-import type { AppProps } from 'next/app';
+import { SessionProvider } from 'next-auth/react';
+import App from 'next/app';
+import type { AppContext, AppProps } from 'next/app';
+
 import '@/core/styles/tailwind.css';
 
 type NextPageWithLayout = NextPage & {
-  getLayout?: (page: ReactElement) => ReactNode;
+  Layout?: ({ children }: { children: ReactNode }) => JSX.Element;
 };
 
-export default function App(
+export default function MyApp(
   props: AppProps & { colorScheme: ColorScheme; Component: NextPageWithLayout }
 ) {
   const { Component, pageProps } = props;
@@ -22,19 +24,45 @@ export default function App(
     setCookies('mantine-color-scheme', nextColorScheme, { maxAge: 60 * 60 * 24 * 30 });
   };
 
-  const getLayout = Component.getLayout || ((page) => <DefaultLayout>{page}</DefaultLayout>);
+  const Layout = Component.Layout || DefaultLayout;
 
   return (
     <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-      <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
-        {/* <SessionProvider session={pageProps.session} refetchInterval={0}> */}
-        {getLayout(<Component {...pageProps} />)}
-        {/* </SessionProvider> */}
+      <MantineProvider
+        theme={{
+          colorScheme,
+          colors: {
+            bgcolor: [
+              '#fbf1e6',
+              '#ded9d1',
+              '#c4c0b8',
+              '#aca69f',
+              '#7a736b',
+              '#605a53',
+              '#45403a',
+              '#2c2520',
+              '#150b00',
+            ],
+          },
+        }}
+        withGlobalStyles
+        withNormalizeCSS
+      >
+        <SessionProvider session={pageProps.session} refetchInterval={0}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </SessionProvider>
       </MantineProvider>
     </ColorSchemeProvider>
   );
 }
 
-App.getInitialProps = ({ ctx }: { ctx: GetServerSidePropsContext }) => ({
-  colorScheme: getCookie('mantine-color-scheme', ctx) || 'light',
-});
+MyApp.getInitialProps = async (appContext: AppContext) => {
+  const colorScheme = (await getCookie('mantine-color-scheme', appContext.ctx)) || 'light';
+  const appProps = await App.getInitialProps(appContext);
+  return {
+    ...appProps,
+    colorScheme,
+  };
+};

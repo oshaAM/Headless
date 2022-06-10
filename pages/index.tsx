@@ -18,7 +18,6 @@ function HomePage() {
           },
         })}
       />
-      <p className="text-red-500 text-3xl mx-auto">meow</p>
       <Header />
       <div className="w-screen">
         <Image src="/img/headless.png" width="700" height="500" className="mx-auto" />
