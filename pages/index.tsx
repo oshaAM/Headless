@@ -10,12 +10,15 @@ import Image from 'next/image';
 function HomePage() {
   return (
     <>
-      <Global styles={(theme) => ({
-        body: {
-          ...theme.fn.fontStyles(),
-          backgroundColor: theme.colorScheme === "dark" ? "#141517" : "#7d766e",
-        }
-      })} />
+      <Global
+        styles={(theme) => ({
+          body: {
+            ...theme.fn.fontStyles(),
+            backgroundColor: theme.colorScheme === 'dark' ? '#141517' : '#7d766e',
+          },
+        })}
+      />
+      <p className="text-red-500 text-3xl mx-auto">meow</p>
       <Header />
       <div className="w-screen">
         <Image src="/img/headless.png" width="700" height="500" className="mx-auto" />
@@ -28,5 +31,6 @@ function HomePage() {
   );
 }
 
+HomePage.getLayout = (page: ReactElement) => <MinimalLayout>{page}</MinimalLayout>;
 
 export default HomePage;

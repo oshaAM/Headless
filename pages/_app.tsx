@@ -1,10 +1,12 @@
 import { GetServerSidePropsContext, NextPage } from 'next';
 import { ReactElement, ReactNode, useState } from 'react';
-import { AppProps } from 'next/app';
 import { getCookie, setCookies } from 'cookies-next';
 import { ColorScheme, ColorSchemeProvider, MantineProvider } from '@mantine/core';
 import { DefaultLayout } from '@/core/layouts/DefaultLayout';
-import "../styles/global.css"
+// import { SessionProvider } from 'next-auth/react';
+import type { AppProps } from 'next/app';
+import '@/core/styles/tailwind.css';
+
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
@@ -25,7 +27,9 @@ export default function App(
   return (
     <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
       <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
+        {/* <SessionProvider session={pageProps.session} refetchInterval={0}> */}
         {getLayout(<Component {...pageProps} />)}
+        {/* </SessionProvider> */}
       </MantineProvider>
     </ColorSchemeProvider>
   );
