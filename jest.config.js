@@ -1,16 +1,8 @@
-const nextJest = require('next/jest');
+// This the Redwood root jest config
+// Each side, e.g. ./web/ and ./api/ has specific config that references this root
+// More info at https://redwoodjs.com/docs/project-configuration-dev-test-build
 
-const createJestConfig = nextJest({
-  dir: './',
-});
-
-const customJestConfig = {
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  moduleNameMapper: {
-    '^@/components/(.*)$': '<rootDir>/components/$1',
-    '^@/pages/(.*)$': '<rootDir>/pages/$1',
-  },
-  testEnvironment: 'jest-environment-jsdom',
-};
-
-module.exports = createJestConfig(customJestConfig);
+module.exports = {
+  rootDir: '.',
+  projects: ['<rootDir>/{*,!(node_modules)/**/}/jest.config.js'],
+}
